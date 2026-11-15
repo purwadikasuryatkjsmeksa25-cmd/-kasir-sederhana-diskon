@@ -6,3 +6,15 @@ import sys
 
 # List global untuk menyimpan data keranjang belanja
 keranjang_belanja = []
+
+# Fungsi untuk memformat angka otomatis dengan titik ribuan (misal: 50000 -> 50.000)
+def format_ribuan(event, entry_widget, string_var):
+    nilai_asli = string_var.get()
+    hanya_angka = "".join(filter(str.isdigit, nilai_asli))
+    
+    if hanya_angka:
+        format_angka = f"{int(hanya_angka):,}".replace(",", ".")
+        string_var.set(format_angka)
+        entry_widget.icursor(tk.END)
+    else:
+        string_var.set("")
