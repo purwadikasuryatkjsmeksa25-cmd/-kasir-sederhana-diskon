@@ -18,3 +18,43 @@ def format_ribuan(event, entry_widget, string_var):
         entry_widget.icursor(tk.END)
     else:
         string_var.set("")
+
+def bersihkan_angka(teks):
+    return float(str(teks).replace(".", ""))
+
+# Fungsi untuk menambah barang ke keranjang & tabel
+def tambah_item():
+    try:
+        nama = entry_nama.get().strip()
+        val_harga = var_harga.get()
+        val_jumlah = entry_jumlah.get()
+        
+        if not nama or not val_harga or not val_jumlah:
+            messagebox.showwarning("Peringatan", "Nama barang, harga, dan jumlah wajib diisi!")
+            return
+            
+        harga = bersihkan_angka(val_harga)
+        jumlah = int(val_jumlah)
+        
+        if harga <= 0 or jumlah <= 0:
+            messagebox.showerror("Error", "Harga dan jumlah harus lebih dari 0!")
+            return
+            
+        subtotal = harga * jumlah
+        
+        # Masukkan ke list
+        keranjang_belanja.append({"nama": nama, "harga": harga, "jumlah": jumlah, "subtotal": subtotal})
+        
+        # Masukkan ke Tabel (Treeview)
+        tree.insert("", tk.END, values=(nama, f"Rp {harga:,.0f}".replace(",", "."), jumlah, f"Rp {subtotal:,.0f}".replace(",", ".")))
+        
+        update_total_sementara()
+        
+        # Reset input barang
+        entry_nama.delete(0, tk.END)
+        var_harga.set("")
+        entry_jumlah.delete(0, tk.END)
+        entry_nama.focus()
+        
+    except ValueError:
+        messagebox.showerror("Error", "Format angka jumlah tidak valid!")
