@@ -58,3 +58,60 @@ def tambah_item():
         
     except ValueError:
         messagebox.showerror("Error", "Format angka jumlah tidak valid!")
+
+# Fungsi untuk menghapus item yang dipilih di tabel
+def hapus_item_pilih():
+    selected_items = tree.selection()
+    if not selected_items:
+        messagebox.showwarning("Peringatan", "Pilih dulu salah satu baris di tabel yang mau dihapus!")
+        return
+        
+    for item in selected_items:
+        index = tree.index(item)
+        tree.delete(item)
+        keranjang_belanja.pop(index)
+        
+    update_total_sementara()
+
+# Fungsi memperbarui total belanja sementara
+def update_total_sementara():
+    total = sum(item["subtotal"] for item in keranjang_belanja)
+    label_total_val.config(text=f"Rp {total:,.0f}".replace(",", "."))
+
+# Fungsi utama proses pembayaran, simpan .txt, dan auto print
+def proses_pembayaran():
+    if not keranjang_belanja:
+        messagebox.showwarning("Kosong", "Keranjang belanja masih kosong!")
+        return
+        
+    val_bayar = var_bayar.get()
+    if not val_bayar:
+        messagebox.showwarning("Peringatan", "Masukkan uang pembayaran terlebih dahulu!")
+        return
+        
+    total_belanja = sum(item["subtotal"] for item in keranjang_belanja)
+    bayar = bersihkan_angka(val_bayar)
+    
+    # Logika Diskon Bertingkat
+    if total_belanja >= 150000:
+        diskon = total_belanja * 0.20
+        info_diskon = "Diskon VIP 20%"
+    elif total_belanja >= 100000:
+        diskon = total_belanja * 0.15
+        info_diskon = "Diskon Spesial 15%"
+    elif total_belanja >= 50000:
+        diskon = total_belanja * 0.10
+        info_diskon = "Diskon Member 10%"
+    else:
+        diskon = 0
+        info_diskon = "Tanpa Diskon"
+        
+    total_akhir = total_belanja - diskon
+    
+    if bayar < total_akhir:
+        kurang = total_akhir - bayar
+        messagebox.showerror("Uang Kurang", f"Uang pembeli kurang Rp {kurang:,.0f}".replace(",", "."))
+        return
+        
+    kembalian = bayar - total_akhir
+    waktu_sekarang = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
