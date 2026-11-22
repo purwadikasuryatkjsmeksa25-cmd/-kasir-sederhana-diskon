@@ -115,3 +115,39 @@ def proses_pembayaran():
         
     kembalian = bayar - total_akhir
     waktu_sekarang = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# Format Struk
+    struk = "=" * 44 + "\n"
+    struk += "          STRUK KASIR TOKO NUSANTARA        \n"
+    struk += f"          Waktu: {waktu_sekarang}      \n"
+    struk += "=" * 44 + "\n"
+    for item in keranjang_belanja:
+        struk += f"• {item['nama']} ({item['jumlah']}x @{item['harga']:,.0f})\n  Subtotal: Rp {item['subtotal']:,.0f}\n".replace(",", ".")
+    struk += "-" * 44 + "\n"
+    struk += f"Total Belanja   : Rp {total_belanja:,.0f}\n".replace(",", ".")
+    struk += f"Promo / Diskon  : {info_diskon} (-Rp {diskon:,.0f})\n".replace(",", ".")
+    struk += f"TOTAL AKHIR     : Rp {total_akhir:,.0f}\n".replace(",", ".")
+    struk += f"Uang Tunai      : Rp {bayar:,.0f}\n".replace(",", ".")
+    struk += f"Kembalian       : Rp {kembalian:,.0f}\n".replace(",", ".")
+    struk += "=" * 44 + "\n"
+    struk += "        TERIMA KASIH TELAH BERBELANJA       \n"
+    struk += "=" * 44
+    
+    # 1. Simpan struk otomatis ke file .txt
+    nama_file_txt = f"struk_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    with open(nama_file_txt, "w", encoding="utf-8") as f:
+        f.write(struk)
+        
+    # 2. Perintah Otomatis Cetak (Print) ke Printer Default Komputer
+    status_print = ""
+    try:
+        if sys.platform == "win32":
+            os.startfile(nama_file_txt, "print")
+        else:
+            os.system(f"lpr {nama_file_txt}")
+        status_print = "🖨️ Struk berhasil dikirim ke printer!"
+    except Exception:
+        status_print = "⚠️ Struk tersimpan, tapi printer tidak terdeteksi/siap."
+        
+    messagebox.showinfo("Transaksi Berhasil!", f"{struk}\n\n📁 File: {nama_file_txt}\n{status_print}")
+    reset_semua()
