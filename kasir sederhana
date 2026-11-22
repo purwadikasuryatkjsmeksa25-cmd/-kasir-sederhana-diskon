@@ -151,3 +151,74 @@ def proses_pembayaran():
         
     messagebox.showinfo("Transaksi Berhasil!", f"{struk}\n\n📁 File: {nama_file_txt}\n{status_print}")
     reset_semua()
+
+# Fungsi Reset
+def reset_semua():
+    global keranjang_belanja
+    keranjang_belanja = []
+    for item in tree.get_children():
+        tree.delete(item)
+    entry_nama.delete(0, tk.END)
+    var_harga.set("")
+    entry_jumlah.delete(0, tk.END)
+    var_bayar.set("")
+    label_total_val.config(text="Rp 0")
+
+# --- DESAIN GUI ---
+root = tk.Tk()
+root.title("Aplikasi Kasir Toko Ultimate - Auto Print")
+root.geometry("540x760")
+root.config(bg="#f8fafc")
+
+var_harga = tk.StringVar()
+var_bayar = tk.StringVar()
+
+# Header
+tk.Label(root, text="Kasir Toko Pintar 🛒✨", font=("Segoe UI", 16, "bold"), bg="#f8fafc", fg="#0f172a").pack(pady=10)
+
+# Frame Input Barang
+frame_input = tk.LabelFrame(root, text=" Input Data Barang ", font=("Segoe UI", 10, "bold"), bg="white", fg="#334155", padx=15, pady=10)
+frame_input.pack(fill="x", padx=20, pady=5)
+
+tk.Label(frame_input, text="Nama Barang:", bg="white", font=("Segoe UI", 9)).pack(anchor="w")
+entry_nama = tk.Entry(frame_input, font=("Segoe UI", 10), relief="solid", bd=1)
+entry_nama.pack(fill="x", pady=2)
+
+tk.Label(frame_input, text="Harga Satuan (Rp):", bg="white", font=("Segoe UI", 9)).pack(anchor="w")
+entry_harga = tk.Entry(frame_input, textvariable=var_harga, font=("Segoe UI", 10), relief="solid", bd=1)
+entry_harga.pack(fill="x", pady=2)
+entry_harga.bind("<KeyRelease>", lambda e: format_ribuan(e, entry_harga, var_harga))
+
+tk.Label(frame_input, text="Jumlah Beli:", bg="white", font=("Segoe UI", 9)).pack(anchor="w")
+entry_jumlah = tk.Entry(frame_input, font=("Segoe UI", 10), relief="solid", bd=1)
+entry_jumlah.pack(fill="x", pady=2)
+
+btn_tambah = tk.Button(frame_input, text="➕ Masukkan ke Keranjang", command=tambah_item, bg="#2563eb", fg="white", font=("Segoe UI", 9, "bold"), bd=0, pady=6, cursor="hand2")
+btn_tambah.pack(fill="x", pady=8)
+
+# Frame Tabel Keranjang (Menggunakan ttk.Treeview)
+frame_cart = tk.LabelFrame(root, text=" Tabel Keranjang Belanja ", font=("Segoe UI", 10, "bold"), bg="white", fg="#334155", padx=10, pady=5)
+frame_cart.pack(fill="both", expand=True, padx=20, pady=5)
+
+columns = ("nama", "harga", "jumlah", "subtotal")
+tree = ttk.Treeview(frame_cart, columns=columns, show="headings", height=5)
+tree.heading("nama", text="Nama Barang")
+tree.heading("harga", text="Harga Satuan")
+tree.heading("jumlah", text="Qty")
+tree.heading("subtotal", text="Subtotal")
+
+tree.column("nama", width=140, anchor="w")
+tree.column("harga", width=90, anchor="center")
+tree.column("jumlah", width=40, anchor="center")
+tree.column("subtotal", width=100, anchor="center")
+tree.pack(fill="both", expand=True, pady=2)
+
+btn_hapus = tk.Button(frame_cart, text="🗑️ Hapus Item Terpilih", command=hapus_item_pilih, bg="#dc2626", fg="white", font=("Segoe UI", 8, "bold"), bd=0, pady=3, cursor="hand2")
+btn_hapus.pack(anchor="e", pady=2)
+
+# Total Sementara
+frame_total = tk.Frame(root, bg="#f8fafc")
+frame_total.pack(fill="x", padx=20, pady=5)
+tk.Label(frame_total, text="Total Belanja:", font=("Segoe UI", 11, "bold"), bg="#f8fafc", fg="#334155").pack(side="left")
+label_total_val = tk.Label(frame_total, text="Rp 0", font=("Segoe UI", 12, "bold"), bg="#f8fafc", fg="#059669")
+label_total_val.pack(side="right")
