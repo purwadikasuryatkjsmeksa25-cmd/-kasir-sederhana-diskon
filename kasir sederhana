@@ -235,3 +235,12 @@ tk.Label(frame_bayar, text="Uang Tunai Pembeli (Rp):", bg="white", font=("Segoe 
 entry_bayar = tk.Entry(frame_bayar, textvariable=var_bayar, font=("Segoe UI", 10), relief="solid", bd=1)
 entry_bayar.pack(fill="x", pady=2)
 entry_bayar.bind("<KeyRelease>", lambda e: format_ribuan(e, entry_bayar, var_bayar))
+
+# Tombol Aksi Akhir
+btn_proses = tk.Button(root, text="🚀 Bayar & Cetak Struk Otomatis", command=proses_pembayaran, bg="#059669", fg="white", font=("Segoe UI", 10, "bold"), bd=0, pady=8, cursor="hand2")
+btn_proses.pack(fill="x", padx=20, pady=5)
+
+btn_reset = tk.Button(root, text="🔄 Reset Transaksi", command=reset_semua, bg="#e2e8f0", fg="#334155", font=("Segoe UI", 9, "bold"), bd=0, pady=5, cursor="hand2")
+btn_reset.pack(fill="x", padx=20, pady=2)
+
+root.mainloop()
