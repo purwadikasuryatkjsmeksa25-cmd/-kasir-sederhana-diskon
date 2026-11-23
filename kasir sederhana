@@ -226,3 +226,12 @@ label_total_val.pack(side="right")
 # Frame Pembayaran
 frame_bayar = tk.LabelFrame(root, text=" Pembayaran ", font=("Segoe UI", 10, "bold"), bg="white", fg="#334155", padx=15, pady=8)
 frame_bayar.pack(fill="x", padx=20, pady=5)
+
+# Frame Pembayaran
+frame_bayar = tk.LabelFrame(root, text=" Pembayaran ", font=("Segoe UI", 10, "bold"), bg="white", fg="#334155", padx=15, pady=8)
+frame_bayar.pack(fill="x", padx=20, pady=5)
+
+tk.Label(frame_bayar, text="Uang Tunai Pembeli (Rp):", bg="white", font=("Segoe UI", 9)).pack(anchor="w")
+entry_bayar = tk.Entry(frame_bayar, textvariable=var_bayar, font=("Segoe UI", 10), relief="solid", bd=1)
+entry_bayar.pack(fill="x", pady=2)
+entry_bayar.bind("<KeyRelease>", lambda e: format_ribuan(e, entry_bayar, var_bayar))
