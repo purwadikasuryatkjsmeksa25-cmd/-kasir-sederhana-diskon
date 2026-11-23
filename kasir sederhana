@@ -222,3 +222,7 @@ frame_total.pack(fill="x", padx=20, pady=5)
 tk.Label(frame_total, text="Total Belanja:", font=("Segoe UI", 11, "bold"), bg="#f8fafc", fg="#334155").pack(side="left")
 label_total_val = tk.Label(frame_total, text="Rp 0", font=("Segoe UI", 12, "bold"), bg="#f8fafc", fg="#059669")
 label_total_val.pack(side="right")
+
+# Frame Pembayaran
+frame_bayar = tk.LabelFrame(root, text=" Pembayaran ", font=("Segoe UI", 10, "bold"), bg="white", fg="#334155", padx=15, pady=8)
+frame_bayar.pack(fill="x", padx=20, pady=5)
